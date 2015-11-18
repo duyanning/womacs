@@ -1,0 +1,8 @@
+用IconsExtract可以提取图标。
+Greenfish Icon Editor和IcoFx 2不仅能提取图标，还能编辑图标。
+
+我提出图标用的是IconsExtract，因为可以直接从进程中提取，不用去找可执行文件的位置。
+编辑图标用的是Greenfish Icon Editor，是个绿色软件。
+
+womacs-256-32为emacs.ico和msword.ico中256*256@32的两个图标组合而成。
+emacs的标志放置在右下角，大小为100*100。

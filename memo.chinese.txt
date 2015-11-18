@@ -1,0 +1,456 @@
+Emacs Style Key Bindings for MS Word
+Bring the light of Emacs to MS Word users.
+Build Emacs on Powerful MS-Word. 
+An Emacs-like MS Word.
+
+要模拟的不光是Emacs的行为，还要模仿Emacs的可扩展性、可定制性。注意，要模拟的是Emacs精神，而不是Emacs的细节。
+不要试图把word改造成emacs，有些事情明明按word的方式做更简单，你偏要用搞个emacs的方式，没什么意思。
+比如说，文档或选中区域的字数，在状态栏就有显示，挂在M-=上似乎没有必要。
+
+c-u用个对话框更好，可以指定更复杂的字符。
+
+那些特点是emacs的优点，哪些特点是emacs的缺点？首先这个要搞清。
+缺点往往是为了字符界面下可用而导致的。
+
+* todo list
+** C-u对话框
+C-u的对话框中按C-u
+给次数乘以4，改变编辑框中的数字部分。
+需要自己的对话框。
+
+* 常见问题
+** 粘贴单词左右被添加空格
+Options > Advanced > Cut, copy, and paste > Use smart cut and paste > Settings
+清除 Adjust sentence and word spacing automatically
+** 没能一气呵成的按键序列
+本来打算按C-x C-u，结果按成了C-x C-f
+C-x按下之后，用了新的keymap，但是该map没有说c-f绑定到什么上边，就还是按normal.dotm绑定到了navpanesearch上。
+此时再按C-u，就像是按C-x C-u一样，因为navpanesearch执行完可不会恢复全局keymap。
+解决办法：发现不合适，就一顿狂按C-g。
+** C-k在某些情况下无效
+例如有如下一行文本：
+abc <回车>
+把光标停在回车之前的空格前，c-k怎么都没有反应。
+解决办法：
+Options > Advanced > Cut, copy, and paste > Use smart cut and paste > Settings
+清除 Adjust sentence and word spacing automatically
+
+** 对于汉语句子，M-e不能移动到正确的位置。
+确保编辑语言把汉语放在英语上边。
+** M-f有时把“推测线程”作为一个词，有时作为两个词
+微软拼音中的自定义词组会影响word对汉语进行分词。
+可以用下边这行命令直接起动微软拼音的用户自定义词编辑器.
+win7:
+C:\Windows\system32\ime\Shared\IMCCPHR.EXE /PHRUI /SC
+mspy2010:
+"C:\Program Files\Common Files\Microsoft Shared\ime14\Shared\IMCCPHR.EXE" /PHRUI /SC
+注意参数必须为大写,否则编辑器出不来.
+
+C:\Program Files\Common Files\Microsoft Shared\IME14\SHARED\IMCCPHR.EXE
+
+win7:
+我是通过process explorer发现该工具所用命令行参数的.
+其命令行如下:
+C:\Windows\system32\ime\Shared\IMCCPHR.EXE /PHRUI /SC /HWND0 /TIP{81D4E9C9-1D3B-41BC-9E6C-4B40BF79E35E} /PROF{F3BA9077-6C7E-11D4-97FA-0080C882687E} /TERM
+那个较短的命令行是我反复试出来的.
+
+mspy2010
+C:\Program Files\Common Files\Microsoft Shared\ime14\Shared\IMCCPHR.EXE /PHRUI /SC /HWND0 /TIP{3FC47A08-E5C9-4BCA-A2C7-BC9A282AED14} /PROF{F3BA9077-6C7E-11D4-97FA-0080C882687E} /TERM
+
+
+
+注意:
+如果没生效,重启word即可.
+
+问题:
+有些词即便定义了,word也没有将其当作一个词.
+如:
+执行方
+美丽人
+
+原因:
+这是因为这些词中含有多音字的缘故.
+
+
+解决办法:
+
+把"执行方"的拼音由
+zhi2 xing2 fang1
+改为
+zhi2 hang2 fang1
+
+把"美丽人"的拼音由
+mei3 li4 ren2
+改为
+mei3 li2 ren2
+
+
+像"调用方"
+如果你把其拼音从
+diao4 yong4 fang1
+改为
+tiao2 yong4 fang1
+那么,word也不会将其当作一个词.
+
+由此看来,word在分词时,是用包含声调的拼音进行匹配的.
+即word先赋予汉字拼音,然后在用这拼音去跟词库中的拼音去进行匹配.
+
+
+*** 其他例子
+凤凰涅槃
+除非你自定义了“涅槃”，否则涅槃不会被当作一个词。
+
+*** 后来不可重现的奇怪现象
+特别注意：在word中输入了汉字之后，word在内部就会自动为其注音。
+比如，在你还没有定义“栈帧”这个新词之前，你就在word中输入了“栈帧”。
+word会将其标注为zhan4 zhen4
+然后你再定义“栈帧”这个词。以前输入的“栈帧”就不会被当做一个词，以后输入的“栈帧”才会被当做一个词。
+
+
+** 英文句号后的空格无法cut掉
+如
+. Word
+这不是womacs的问题,因为就算你不用womacs，选中这个空格后无法cut掉
+解决办法:
+Options | Advanced | Cut, copy, and paste | Settings
+清除复选框 Adjust sentence and word spacing automatically
+** 第一次按下前缀键后，搜狗输入法不能自动关闭
+打开word文档，如果输入法一开始就处于开启状态
+第一次执行C-c r时，C-c之后，输入法没能自动关闭。
+这是搜狗的bug,qq拼音和加加都无此问题。
+workround：第一次按下前缀键后，紧接着按C-g
+** 用C-d删除域中的最后一个空格,导致整个域被删除掉
+不要用C-d,直接在键盘上按del
+虽然C-d的代码跟del录制后的代码一样,但估计word还是在按下del后做了一些事情,而这些事情并没有被记录在宏中.
+
+** qq输入法bug
+用word打开文档，先不要启动输入法
+C-s弹出对话框
+启动输入法
+然后C-g关闭对话框
+关闭word，
+word奔溃。
+如果能在关闭对话框或者关闭word之前关闭输入法，则不会崩溃。
+在对话框出现之前就在word中启动输入法，也无此问题。
+拼音加加无此问题。
+问题版本 4.5 （2004）
+================
+bug报告
+一个会导致MS-Word在退出时崩溃的严重bug
+
+问题版本：QQ拼音输入法 4.5 (2004)
+平台：Win7，MS Office 2010
+重现过程：
+新建空白word文档，另存为a.docm
+按Alt-F11启动VBA编辑器
+插入一个窗体（默认名为UserForm1），在窗体上放置一个文本编辑框
+为窗体添加对Click事件的响应过程，如下：
+Private Sub UserForm_Click()
+    Unload Me
+End Sub
+
+然后在VBA环境的Immediate窗口，输入这面这行并回车：
+UserForm1.show vbModeless
+此时窗体将以modeless形式呈现
+然后用鼠标点击窗体上的文本框，保证插入点出现在文本框中
+然后启动QQ拼音，不要输入任何东西
+然后再点击窗体本身，此时窗体消失
+现在关闭MS-word，将会发生奔溃。
+
+拼音加加无此问题。
+
+
+
+* 开发手记
+
+** 无法提供global_set_key这样的简单接口
+我曾设想给用户提供一个简单的接口（即global_set_key）来绑定多级按键和命令。
+也就是说global_set_key执行过程中不但生成多级keymap，还自动产生相应的过程，并将这些过程绑定到各级前缀按键（如C-x）上，当前缀按键按下时，这些过程将得到执行，这些过程的做的事情就是按照相应的次级keymap设置word的键绑定。
+在运行时产生这些过程需要有lambda表达式的支持，但vba没有lambda表达式，无法在运行时定义过程。为了解决这个问题，我自己实现了FakeLambda，通过修改vba工程对象模型，实现了在运行时添加过程的功能。但这种做法却面临着运行时添加代码后变量值丢失的困境。
+如何保存变量的值防止丢失？在两次会话之间用文档变量保存倒是一个办法，只是用文档变量只能保存一些简单变量的值。而我需要在会话之间维护一些复杂的数据结构，如keymap tree。很难做到，放弃了。差一点就成功了。
+
+一种退而求其次的做法是让用户先运行一遍customize，global_set_key第一次运行时自动产生必要的次级keymap安装过程。然后emacsword工作的时候要调用这些过程，过程已经存在了。global_set_key第二次运行时生成多级keymap，前缀键在keymap中的条目就是这些次级keymap安装过程。但是这样就没有真emacs那样灵活了。
+
+最终，只好放弃global_set_key这个简单接口，而让用户直接面对多级keymap和次级keymap安装过程。不过好在也不难。虽然会看到很多自己不关心的keymap条目。
+而Customize中就只能设置一些变量了。而无法关联按键跟过程了。要想改变按键关联的过程，就只能去修改建立keymap的代码。
+** Lambda
+在两次交互式的调用之间，如果修改了代码（无论是手工修改还是通过代码自动修改），第一次调用设置的那些变量的值就丢失了。
+手工修改的时候word会提示“该操作将重新设置工程，继续吗？” （"This action will reset your project, proceed anyway?"），如果选择“是”，那么本project中所有变量目前的值就都被reset了。但是其他工程不会受影响。利用这个特点，我们可以产生一个新文档，然后在新文档的工程中添加代码，这样添加新代码就不会导致当前工程被reset。但是这样有一个问题，当前文档中的代码无法调用新文档中的代码(即使通过application.run也不行)，新文档中的代码无法调用当前文档中的代码(通过application.run也不行)。显示“无法运行指定的宏”。奇怪的是有时当前文档能调用新文档中的宏，有时新文档中的宏能调用当前文档中的宏，但从来不能双向，莫非是谁先谁就可以？搞不明白。
+
+** 把键绑定保存在什么地方
+曾想把键绑定保存在用户文档中，但是用户把文档给别人可能会发生问题。
+如果把键绑定保存在emacsword.dotm中，用户关闭自己的文档时会提醒要不要保存emacsword.dotm，会让用户感到莫名其妙。而且，新打开的文档会使用emacsword.dotm中的键绑定。
+把键绑定保存在normal.dotm中肯定不好。
+最后还是决定保存在用户文件中。
+记得要清除emacsword.dotm中的键绑定。
+现在可以在文档关闭时自动清除.
+
+** 不是每个按键都绑定
+单字母按键就没绑定，绑定了会影响word的性能。
+不是所有按键都做了绑定，又不能修改normal.dotm，所以，有些键绑定是normal.dotm中设置的。
+这样一来就会发生多级按键序列中途未完成的情况，见注意事项。
+** 没能一气呵成的按键序列
+你按下一个快捷键之后，word是这样工作的：
+首先在当前文档中查到键绑定，找不到的话，再在normal.dotm中查找。
+有些键绑定是在normal.dotm中，为了取消这些快捷键，只有两种办法：
+在normal.dotm删除该键绑定（如此以来，在normal.dotm中也找不到对应的键绑定）
+在当前文档中将该键绑定设置为禁止（不是删除，所以将在当前文档中找到，但却是禁止状态）
+
+为了不出现没能一气呵成的按键序列引起的奇怪现象，我们需要在当前文档中取消所有的键绑定，然后再添加我们emacs风格的键绑定。
+取消所有键绑定比较麻烦，不知道速度如何。
+
+或者别的途径，通过可视化的方法提醒按键序列还没有完成，请小心。
+状态栏在2010中已经被废止了，不可靠。
+标题栏又太高，不显眼。
+改变光标又不能持久。
+** Cmd与cmd shell
+Cmd shell用来处理一些与交互式调用有关的事宜，而cmd就是cmd本身。Cmd shell会在调用cmd前后做一些工作，要不要区分cmd和cmd shell呢？把按键绑定到cmd shell而非cmd上。
+没必要！
+因为emacs中cmd不涉及交互是为了方便用户构造自己的函数，但在word中，直接从word提供的功能构造即可，不必从这些模拟emacs的cmd来构造。
+于是，cmd本身就处理交互，直接绑定到按键身上。
+** 调试
+调试的时候，为了避免已安装的版本对正在开发即正在调试版本的干扰，应当删除已安装版本。
+如果已安装版跟开发版同时存在，则普通的调用会找到当前打开的开发版，而快捷键所绑定的过程似乎是已安装版本中的优先。导致你在开发版中无法为按键绑定的过程设置断点。
+我通过develop.bat解决了这个问题.
+
+
+被绑定到按键上的过程如果被修改，会导致问题。所以，修改过程之前，先切换回word模式。
+
+** 读写问题
+用vba代码删除工程中的模块a，然后从文件中立即导入a，结束后应当只有一个a；然而，有时却发现结束后有一个a，还有一个a1。难道是a还没删掉，新a就被导入然后被命名为a1了吗？难道vba的删除是一步的，也就是说进行删除的vba语句结束了，删除操作还在进行。
+还有一个现象，生成的发布文件安装之后，创建一个新文件，查看宏，你会发现发布文件中竟然没有宏；有时候就是正常的。可能还是跟上一个问题相同的原因。但也可能是我生成新发布文件之前要删除老的发布文件，如果删除与生成离得太近，就会发生问题。因为有时候我手动删除老的然后生成新的就没这个问题。
+有问题的发布文件直接打开后在vba IDE中看到是templateproject，而好的直接打开看到的则是project。但这似乎是与我用Documents.Add(NewTemplate:=True)还是Documents.Add有关，虽然最后都是保存为模板，但前者打开就是templateproject，而后者就是project，而且安装后还没发现看不到宏的问题。我认为这是word的bug。
+搞不懂，生成发布版之前先删除已安装版本一切就都正常（注意，关闭了所有word才能删除）。
+看是否正常，只要看里面有没有宏。
+** 润物细无声
+原则：决不能把emacsword自用的文档变量、emacs风格的键绑定留在文档中，特别是键绑定，免得让没用emacsword的人疑惑。（不要在磁盘上留下带有emacsword痕迹的文档）
+原则：不要让用户惊讶。用户明明没有做改动，提示是否保存改动就不好。（管理好saved，不要让emacsword的幕后动作影响文档saved的状态）
+原则：用户说保存才保存。不要自行保存，这样会改变文档的修改时间。
+
+** 绑定了哪些键？
+    Dim kbLoop As KeyBinding
+
+    CustomizationContext = NormalTemplate
+
+    For Each kbLoop In KeyBindings
+        Selection.InsertAfter kbLoop.Command & vbTab _
+            & kbLoop.KeyString & vbCr
+        Selection.Collapse Direction:=wdCollapseEnd
+    Next kbLoop
+以上这段代码不会产生任何输出，这是因为normal.dotm中默认的键绑定并不在KeyBindings这个集合中。
+你为某个命令添加一个新的按键，或者删除一个按键，都会在KeyBindings中增加一个新元素，从而导致上面这段代码输出。
+** 关闭时出错
+现象：新文档，开启womacs，开始录制宏，停止录制，退出，出错。
+原因：录制宏对normal.dotm做了修改，App_DocumentBeforeSave的参数doc为normal.dotm。此时调用ActiveDocument会导致错误。
+
+** frx与版本控制
+Form导出的时候会产生两个文件：.frm与.frx，后者是个二进制文件。
+每次导出，.frx都会发生变化（右键属性看subversion给出的checksum便知），即使你根本没有改动该Form。
+导入.frm的时候对应的.frx也得存在，否则会出错。
+算了，womacs不要用什么form了。
+** 版本号
+现在用的版本号是develop_src的版本号，这个版本号跟上级文件夹womacs的版本号未必一致。
+但是不影响定位bug。因为bug的必然是develop_src中的代码导致。
+
+** 根本没改文档，退出的时候提示保存
+开发用的womacs.docm，即便你没改，也没启动womacs，退出的时候，有时会提示保存，有时不会。
+无论直接开打womacs.docm，还是通过批处理打开，都有这种情况发生。
+如果提示保存，你cancel，你会发现，有两个可撤销的操作：VBA-Fields.Add和VBA-Fields.Delete
+我估计是endnote干的好事。因为我根本没启动womacs。
+** CUA模式
+cua模式跟C-x C-x如何共存？
+这个在emacs中就有问题。
+按下第一个C-x之后0.2秒内，如果没有别的按键，就按剪切处理，否则当做前缀。
+问题是emacs中两个连着C-x总是算作一个。而我让第二个C-x跟其他按键如C-f同等对待。只要按得足够快，C-x C-x就是交换。
+
+cua模式其实没有必要!!!
+因为能在word中用womacs的人,必是极喜欢emacs风格键绑定的人.他们不需要在womacs中cua.
+为什么这么说?因为womacs除了提供emacs风格的键绑定外,并没有提供其他emacs的特点.
+** kill-line
+emacs会删除到回车，但不包括回车。
+但如果被删的第一个字符就是回车，照删不误。
+** 退出时显示connecting to printer, press esc to cancel
+启动了womacs，且用了M-d, C-k之类的命令，就会出现这种情况；而用C-d，M-f则无。
+在没有连接打印机的机子上无此问题
+
+** IME相关问题
+Windows 2000: Full-featured IMM support is provided in all localized language versions. However, the IMM is enabled only when an Asian language pack is installed. An IME-aware application can call GetSystemMetrics with SM_IMMENABLED to determine if the IMM is enabled.
+详见：http://msdn.microsoft.com/en-us/library/windows/desktop/dd317702%28v=VS.85%29.aspx
+
+一般来说，应用程序是不知道输入法编辑器的存在的（IME-unaware），但是也有IME-aware的应用程序。womacs就是。它会去主动操控输入法编辑器的状态。
+An IME-aware application, on the other hand, participates in the creation and management of IME windows.
+（http://msdn.microsoft.com/en-us/library/windows/desktop/dd374062%28v=VS.85%29.aspx）
+
+womacs现在已经是个IME-aware软件了.
+** 支持global_set_key
+*** 理想做法：
+将[a-zA-Z]这些单键，还有C-? M-?这些组合键都绑定到各自的过程（称之为“键过程”）上。
+键过程跟按键一一对应，每个键过程都知道自己是因为按了哪个键才被调用的。
+
+由global_set_key建立一个以global_keymap为根的keymap树，
+键过程调用过程look_up，传入键代码，从当前keymap中查找到以对应该键代码条目。
+如果该条目的类型为过程，则获得条目中记录的过程名，然后调用该过程。
+如果该条目的类型为keymap，则让current_keymap指向条目中记录的keymap。
+
+*** 理想做法的缺陷
+理想做法虽然符合emacs的做法，但是因为word的限制，存在一些缺陷。
+即将[a-zA-Z]这些单键绑定到各自的键过程，然后由键过程再查global_keymap来执行插入字符这类简单工作，速度太慢，不能忍受。
+
+*** 变通做法
+去掉global_keymap这个根，让keymap树变成keymap森林。
+
+global_set_key "C-c r", "让文字变红"
+所做工作如下：
+将C-c绑定到use_C_c_keymap
+在C_c_keymap中添加对应按键r的条目，条目类型为command，条目中记录的命令名在“让文字变红”。
+
+用户按下C-c r后：
+C-c导致use_C_c_keymap被调用
+use_C_c_keymap将所有按键绑定到各自的键过程，并将current_keymap设为C_c_keymap
+r导致r的键过程被调用，该过程在current_keymap即C_c_keymap中查找r，得到条目的类型为command，命令名为“让文字变红”，调用之
+恢复原始的键绑定格局。
+current_keymap怎么调整？不用管？或者将其没有真实意义第设置为指向global_keymap。
+
+================================================================
+global_set_key "C-c c r", "让文字变红"
+所做工作如下：
+将C-c绑定到use_C_c_keymap
+在C_c_keymap中添加对应按键c的条目，条目类型为keymap。
+new一个新的keymap出来，挂在该条目上。
+在新的keymap中添加对应按键r的条目，条目类型为command，条目中记录的命令名为“让文字变红”。
+
+用户按下C-c c r后：
+C-c导致use_C_c_keymap被调用
+use_C_c_keymap中将所有按键绑定到各自的键过程，并将current_keymap设为C_c_keymap
+c导致c的键过程被调用，该过程在current_keymap即C_c_keymap中查找c，得到的条目类型为keymap，得到该keymap，让current_keymap指向它。
+r导致r的键过程被调用，该过程在current_keymap即c的keymap中查找r，得到过程名“让文字变红”，调用之
+恢复原始的键绑定格局。
+
+*** 两种状态
+普通状态：每个按键都绑定至自己的键过程（而不是命令），如emacs
+global_keymap加速状态：global_keymap中的按键直接绑定至命令，而不用查询keymap。
+
+可见两种绑定，一种是word中的，一种是emacs中的。
+word中的用bind一词，emacs中用set一词（对应global-set-key）
+** 调试时重置所有变量
+在Immediate窗口执行end
+** 恢复word默认的键绑定
+切换到emacs模式，C-b几下，然后修换到word模式。
+恢复了word默认的键绑定之后，调试输出显示C-b关联到粗体，但实际效果仍然是向左。
+如果在恢复之后，在word中查看一下键绑定，实际效果就变成了粗体。
+为什么查看一下就好了？
+
+或许是word自身的bug。
+
+避免该bug的办法：在clearall之前，把所有的都disable一下。
+版本：2010
+
+** word会自动保存
+新建一个文档，弄些内容，切换到emacs模式，但不要保存。
+过了许久，自动弹出一个对话框叫我保存。
+保存了没事，取消则会导致我womacs出错。
+run-time error '4198'
+command failed
+
+原因：果然是自动保存弹出的对话框。
+版本：2010
+** 弹出modeless的内建对话框，如查找对话框
+Application.Run macroname:="EditFind"
+Dialogs(wdDialogEditFind).Show
+CommandBars.FindControl(id:=141).Execute
+
+要得到一个一个modeless的内建对话框只能选择第三种方式。
+前两种得到的都是modal的对话框，而且只有一个tab。
+
+原因如下：
+
+
+参考：http://help.wugnet.com/office/Find-Replace-dialog-ftopict527791.html
+摘录如下：
+This code doesn't do much more than simulate a click on "Edit > Find"
+(...the Id of that control being 141).
+
+But even this method doesn't guarantee subtle -- or not so subtle --
+differences from calling the command in the user interface. 
+** isearch
+*** I-search与emacs行为有差异
+backspace不会在C-s经过的几个匹配处回退，会直接导致目标串变短。我更喜欢我的方式，因为我以前用emacs就不习惯backspace回退，半天回退不完，要回退用C-r去。
+一旦找不到匹配，选中区域就消失，变成光标。
+
+*** 鼠标点击word编辑区后让isearch窗体自动消失
+**** deactivate事件走不通，得不到这个事件。
+**** 检测selection的变化
+只要点击编辑区，selection就会变化，会得到相应通知。
+但isearch工作期间，selection也会变化。
+所以，如果是isearch导致selection变化，我就让doing_search = True，之后再doing_search = False。
+但是现在发现一个问题，我都doing_search = False了，竟然doing_search = False之前的代码导致的selection变化才触发事件。
+要我是在doing_search = False之前等一等，那么处理事件时doing_search的值才是正确的True。
+
+** minibuffer
+对于自定义对话框，完全可以搞出keymap来。但是有必要吗？
+** toggle_womacs出错
+Compile error in hidden module:  Main.
+This error commonly occurs when code is incompatible with the version, platform, or architecture of this application.  Click "Help" for information on how to correct this error.
+
+原因：代码根本不能运行，一般是修改了代码，还没有调试，代码根本不能运行就生成了发布版。
+** ActiveWindow.ScrollIntoView Selection.Range不好用
+就算调用之前selection就可见，调用之后仍然会将其位于屏幕正中
+
+另外ActiveWindow.GetPoint有bug
+按文档上所说，If the entire range or shape isn't visible on the screen, an error occurs.
+但是即便selection不在屏幕上，也没有错误发生。
+我原本打算在错误发生时才调用ActiveWindow.ScrollIntoView Selection.Range
+看来是不行了。
+
+** 新建文档时取消对话框
+建立一个新文档
+打几个字
+保存
+弹出保存对话框时取消
+此时显示命令错误
+
+
+原因：保存对话框弹出后，如果你选择取消，就会发生错误。
+
+** 另存为，原来的文档中键绑定没有被清除
+新文档中有键绑定。
+这也算合理。
+
+** 关闭时说：因为没有打开的文档，所以这一命令无效。
+** 新文档，开启womacs，开始录制宏，停止录制，退出，出错。
+
+原因：录制宏对normal.dotm做了修改，App_DocumentBeforeSave的参数doc为normal.dotm。
+** hidden的文字，粘贴为纯文本的时候出错。
+** word bug
+文件打开，还没启动womacs，c-f就向右。
+但是一按c-b，不向左，而且从此c-f不向右。
+检查键绑定，似乎也没绑定。
+
+** 按键规划
+常用的应该短一点。方便记忆。规整。
+
+C-c s h 1或（C-c h 1）
+代表
+style heading 1
+
+C-c a l			左对齐
+C-c a r			右对齐
+C-c a c			居中
+C-c 1			标题1
+C-c 2			标题2
+C-c n			正文
+C-c d			正文缩进
+C-c C-c			显示或隐藏标记
+
+太长的按键序列记不住，一般最多4级。
+
+** 插入题注
+wdDialogInsertCaption
+** 我自己的.emacs
+我自己用的.emacs和发布用的.emacs
+两个模块，看导出哪个。
+** 待整理
+* 可能有用的word知识
+ActiveWindow.DocumentMap = true or false
+ActiveWindow.Thumbnails = True or false
+都可以弹出navpane，不过是前两个tab。
