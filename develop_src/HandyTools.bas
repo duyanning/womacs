@@ -314,3 +314,21 @@ Sub handy_tools_format_drawing_object()
     On Error Resume Next
     Application.Run macroname:="FormatDrawingObject"
 End Sub
+
+
+' ²Î¿¼http://software-solutions-online.com/word-vba-resize-pictures/
+Sub change_pictures_scale()
+    Dim iShape
+    Dim preferredScale As Integer
+    preferredScale = InputBox("input x for x%", "scale")
+    
+    
+    For Each iShape In ActiveDocument.InlineShapes
+        iShape.LockAspectRatio = msoTrue
+        'iShape.ScaleHeight = 50
+        iShape.ScaleHeight = preferredScale
+        
+    Next iShape
+
+End Sub
+

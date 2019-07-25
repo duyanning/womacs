@@ -972,6 +972,7 @@ Sub save_buffer()
 
     On Error Resume Next
     ActiveDocument.Save
+    'Application.Run macroname:="FileSave"
 
     complete
 End Sub

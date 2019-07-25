@@ -128,7 +128,7 @@ Private Sub generate_template_for_publishing()
     Debug.Print cmd_line_to_subwcrev
     
     ' womacs has been changed from sourceforge(svn) to bitbucket(hg)
-    Shell cmd_line_to_subwcrev, 1
+    'Shell cmd_line_to_subwcrev, 1
     
     ' pause to wait for subwcrev.exe to exit
     MsgBox "Please wait for subwcrev.exe to exit"

@@ -106,26 +106,29 @@ press Alt+F11 to get the VBA editor.
 
 double click module dotEmacs.
 
-you can use global_set_key/global_unset_key here.
+you can use `global_set_key`/`global_unset_key` here.
 
 
 # Download
 
-https://sourceforge.net/projects/womacs/files/
+https://github.com/duyanning/womacs/releases
 
 # Install
 
+```Batchfile
 copy womacs.dotm "%userprofile%\Application Data\Microsoft\Word\Startup"
+```
 
 Caution: Before installing, you need to exit all MS-word. Perhaps, you may want to backup up the dotEmacs module of the old version.
 # Activate
 
-run macro toggle_womacs to toggle womacs. It is handy to add a Quick Access Toolbar button for this macro (Project.Main.toggle_womacs).
+run macro `toggle_womacs` to toggle womacs. 
+It is handy to add a Quick Access Toolbar button for this macro (`Project.Main.toggle_womacs`).
 # Bug report
 
 I have been developing Womacs using MS-Word 2010 and Win7 (Chinese Edition).
 
-If you experienced problems, please visit https://sourceforge.net/tracker/?group_id=544480&atid=2210377 and click Add new to submit bug reports.
+If you experienced problems, please visit https://github.com/duyanning/womacs/issues and click `New issue` to submit bug reports.
 
 Please include in bug reports the version number of Womacs in which you are running into troubles.
 
