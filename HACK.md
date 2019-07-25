@@ -1,17 +1,16 @@
+For more information see: https://github.com/duyanning/womacs
 
-
-For more information see: http://womacs.sf.net
-
-    womacs\
-        womacs-dev.docm         used to develop VBA project, DO NOT open this document directly, use develop.bat to open it.
-        install.bat             copy publish\womacs.dotm to Word\STARTUP
-        uninstall.bat           remove womacs.dotm from Word\STARTUP
-        develop.bat             open womacs.docm for developing
-        develop_src\            VBA code exported from womacs-dev.docm
-        publish\                staff generated to publish
-            src\                VBA code to be embodied in womacs.dotm
-            womacs.dotm         the resulting word template to publish
-
+```
+womacs\
+    womacs-dev.docm         used to develop VBA project, DO NOT open this document directly, use develop.bat to open it.
+    install.bat             copy publish\womacs.dotm to Word\STARTUP
+    uninstall.bat           remove womacs.dotm from Word\STARTUP
+    develop.bat             open womacs.docm for developing
+    develop_src\            VBA code exported from womacs-dev.docm
+    publish\                staff generated to publish
+        src\                VBA code to be embodied in womacs.dotm
+        womacs.dotm         the resulting word template to publish
+```
 
 Note: womacs-dev.docm (for developing) and womacs.dotm (to publish)
 have different filename extension. If womacs-dev.docm does NOT exist,
