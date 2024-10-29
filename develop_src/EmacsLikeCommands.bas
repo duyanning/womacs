@@ -10,7 +10,14 @@ Public statusbar_prefix As String
 Public search_fwd As Boolean
 
 ' doc local
-Public womacs_on As Boolean
+' 在Applicaiton.ScreenUpdating失效情况下，为避免大量KeyBindings.Add导致的界面卡死
+' 采用了Application.Visible技术。该技术会导致word主窗口频繁激活/失活
+' 致使原来搞的那套word主窗口失活时才将变量保存进文档的做法失效。
+' 那就不维护两份拷贝了，直接用文档中的那份
+'Public womacs_on As Boolean
+
+' womacs_on这样处理（即“无副本”化）后，其他特定与单个文档的状态是不是也得这样处理？
+' 下面两个肯定是；还有与C-s搜索框相关的变量呢？
 Public mark_set As Boolean     ' has mark been set?
 Public mark_pos As Long        ' position of the mark
 
@@ -37,11 +44,31 @@ Dim action_record_balance As Integer    ' for debug
 'Public kill_whole_line As Boolean
 Public delete_word As Boolean
 
+'获取文档中记录的womacs的开关状态
+Function get_womacs_status(ByVal Doc As Document) As Boolean
+    Dim status As Boolean
+    status = False
+
+    '如果文档中并没有记录，那么读取该变量就会出错，好在我们给了status一个默认值False
+    '这样一来，如果文档中并没有记录womacs的开启状态，我们就认为还未开启
+    On Error Resume Next
+    status = CBool(Doc.Variables("womacs_on"))
+    
+    get_womacs_status = status
+End Function
+
+Sub set_womacs_status(ByVal Doc As Document, status As Boolean)
+    push_saved_state Doc
+    
+    Doc.Variables("womacs_on") = CStr(status)
+   
+    pop_saved_state Doc
+End Sub
 
 Sub store_doc_locals(ByVal Doc As Document)
     push_saved_state Doc
     
-    Doc.Variables("womacs_on") = CStr(womacs_on)
+    'Doc.Variables("womacs_on") = CStr(womacs_on)
     Doc.Variables("mark_set") = CStr(mark_set)
     Doc.Variables("mark_pos") = CStr(mark_pos)
     
@@ -50,12 +77,12 @@ End Sub
 
 
 Sub load_doc_locals(ByVal Doc As Document)
-    womacs_on = False
+    'womacs_on = False
     mark_set = False
     mark_pos = -1
 
     On Error Resume Next
-    womacs_on = CBool(Doc.Variables("womacs_on"))
+    'womacs_on = CBool(Doc.Variables("womacs_on"))
     mark_set = CBool(Doc.Variables("mark_set"))
     mark_pos = CLng(Doc.Variables("mark_pos"))
 End Sub
@@ -136,7 +163,7 @@ End Sub
 
 Sub select_nothing()
     ' if there is no highlight
-    If Selection.type = wdSelectionIP Then
+    If Selection.Type = wdSelectionIP Then
         Exit Sub
     End If
 
@@ -191,7 +218,7 @@ Sub kill_line()
     ' move to the end of line
     Selection.EndKey Unit:=wdLine, Extend:=wdExtend
 
-    If Selection.type <> wdSelectionIP _
+    If Selection.Type <> wdSelectionIP _
             And Asc(Selection.Characters.last.Text) = 13 _
             And Asc(Selection.Characters.First.Text) <> 13 Then
         Selection.MoveLeft Unit:=wdCharacter, Count:=1, Extend:=wdExtend
@@ -200,7 +227,7 @@ Sub kill_line()
 
     'Selection.StartIsActive = Not Selection.StartIsActive
     
-    If Selection.type <> wdSelectionIP Then
+    If Selection.Type <> wdSelectionIP Then
         Selection.Cut
     End If
 
@@ -891,7 +918,7 @@ Sub exchange_point_and_mark()
 'C-x C-x
     
     ' if region is not highlight, highlight it first.
-    If Selection.type = wdSelectionIP Then
+    If Selection.Type = wdSelectionIP Then
         Dim point_pos As Long
         point_pos = Selection.Start
         
@@ -970,6 +997,7 @@ End Sub
 Sub save_buffer()
 'C-x C-s
 
+    'MsgBox "haha"
     On Error Resume Next
     ActiveDocument.Save
     'Application.Run macroname:="FileSave"
@@ -1239,7 +1267,7 @@ Sub delete_horizontal_space()
     
     Selection.MoveStartWhile cset:=" ", Count:=wdBackward
     Selection.MoveEndWhile cset:=" ", Count:=wdForward
-    If Selection.type = wdSelectionNormal Then
+    If Selection.Type = wdSelectionNormal Then
         Selection.Delete
     End If
     
@@ -1256,7 +1284,7 @@ Sub just_one_space()
     
     Selection.MoveStartWhile cset:=" ", Count:=wdBackward
     Selection.MoveEndWhile cset:=" ", Count:=wdForward
-    If Selection.type = wdSelectionNormal Then
+    If Selection.Type = wdSelectionNormal Then
         Selection.Delete
     End If
     

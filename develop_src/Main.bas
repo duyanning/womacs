@@ -14,6 +14,8 @@ End Sub
 
 
 Public Sub toggle_womacs()
+    'MsgBox "00000: " & womacs_on
+    
     If Not womacs_initialized Then
         register_event_handler
         build_global_keymap
@@ -30,18 +32,28 @@ Public Sub toggle_womacs()
         Exit Sub
     End If
     
-    If Not womacs_on Then
+    'Debug.Print "before: " & womacs_on
+    
+    'If Not womacs_on Then
+    If Not get_womacs_status(ActiveDocument) Then
+        'womacs_on = True
+        set_womacs_status ActiveDocument, True
         use_emacs_key_bindings
-        womacs_on = True
         
+        'Debug.Print "before: " & womacs_on
+        
+        MsgBox "GNU Emacs mode", vbOKOnly, "Womacs" '我感觉弹出消息框都会让word主窗口失活
         set_emacs_app_caption
-        MsgBox "GNU Emacs mode", vbOKOnly, "Womacs"
     Else
+        'womacs_on = False
+        set_womacs_status ActiveDocument, False
         use_word_key_bindings
-        womacs_on = False
         
-        set_word_app_caption
         MsgBox "MS Word mode", vbOKOnly, "Womacs"
+        set_word_app_caption
     End If
+
+    'MsgBox "after: " & womacs_on
+
 End Sub
 

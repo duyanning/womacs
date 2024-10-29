@@ -91,7 +91,7 @@ End Sub
 
 
 Sub search_match(fwd As Boolean, wrap As WdFindWrap)
-    Debug.Assert Selection.type = wdSelectionIP
+    Debug.Assert Selection.Type = wdSelectionIP
     
     Selection.Find.ClearFormatting
     With Selection.Find
@@ -215,7 +215,7 @@ Sub when_change()
                 '不管是因为上面的哪个子式为false导致进入else分支，我们都认为是失败
                 match_found = False
                 update_match_result prev_ok_match_start
-                Debug.Assert Selection.type = wdSelectionIP
+                Debug.Assert Selection.Type = wdSelectionIP
             End If
             
             '到这里说明向下没找到，再向上找

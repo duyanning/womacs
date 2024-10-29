@@ -183,7 +183,7 @@ Private Sub export_vba_source_code(c As VBComponent, src_dirname As String)
     Dim suffix As String
     'Debug.Print c.Name, c.CodeModule.Name, c.CodeModule.CountOfLines
     
-    Select Case c.type
+    Select Case c.Type
     Case vbext_ct_ClassModule
         suffix = ".cls"
     Case vbext_ct_MSForm

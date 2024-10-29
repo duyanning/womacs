@@ -98,7 +98,7 @@ End Sub
 
 
 Sub handy_tools_punct_ch_to_en()
-    If Selection.type <> wdSelectionNormal Then
+    If Selection.Type <> wdSelectionNormal Then
         Exit Sub
     End If
 
@@ -121,7 +121,7 @@ Sub handy_tools_punct_ch_to_en()
 End Sub
 
 Sub handy_tools_punct_en_to_ch()
-    If Selection.type <> wdSelectionNormal Then
+    If Selection.Type <> wdSelectionNormal Then
         Exit Sub
     End If
 
@@ -162,7 +162,7 @@ Sub handy_tools_add_space_between_punct_and_char()
     Dim found As Boolean
     Dim t As Range
     
-    If Selection.type <> wdSelectionNormal Then
+    If Selection.Type <> wdSelectionNormal Then
         Exit Sub
     End If
 

@@ -20,11 +20,18 @@ Private Type POINTAPI
     Y As Long
 End Type
  
-Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
-Private Declare Function WindowFromPoint Lib "user32" (ByVal xPoint As Long, ByVal yPoint As Long) As Long
-Private Declare Function SetCapture Lib "user32" (ByVal hwnd As Long) As Long
-Private Declare Function ReleaseCapture Lib "user32" () As Long
-Private Declare Function GetCapture Lib "user32" () As Long
+'Private Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+'Private Declare Function WindowFromPoint Lib "user32" (ByVal xPoint As Long, ByVal yPoint As Long) As Long
+'Private Declare Function SetCapture Lib "user32" (ByVal hwnd As Long) As Long
+'Private Declare Function ReleaseCapture Lib "user32" () As Long
+'Private Declare Function GetCapture Lib "user32" () As Long
+
+Private Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+Private Declare PtrSafe Function WindowFromPoint Lib "user32" (ByVal xPoint As Long, ByVal yPoint As LongPtr) As LongPtr
+Private Declare PtrSafe Function SetCapture Lib "user32" (ByVal hwnd As LongPtr) As Long
+Private Declare PtrSafe Function ReleaseCapture Lib "user32" () As Long
+Private Declare PtrSafe Function GetCapture Lib "user32" () As LongPtr
+
  
 Private FrameHwnd As Long
  

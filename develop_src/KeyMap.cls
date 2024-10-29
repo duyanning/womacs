@@ -87,6 +87,9 @@ Public Sub bind(ByVal Doc As Document)
 '    Set current_keymap = Me
 
     CustomizationContext = Doc
+    
+    'Application.Visible = False
+    turn_on_off_screen_updating False
 
     KeyBindings.clearAll
 
@@ -106,6 +109,8 @@ Public Sub bind(ByVal Doc As Document)
     Next i
 
 
+    'Application.Visible = True
+    turn_on_off_screen_updating True
     pop_saved_state Doc
 
 End Sub

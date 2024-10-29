@@ -38,3 +38,22 @@ Macro Settings` and check `Trust access to the VBA project object
 model`.
 
 
+
+# 调试办法
+
+首先，执行uninstall.bat以删除文件
+
+`"%userprofile%\Application Data\Microsoft\Word\Startup\womacs.dotm"`
+
+这个文件的自动加载会干扰我们开发。
+
+
+
+区分两个模板：
+
+- `womacs-dev.dotm`	这是写代码的地方（但我们并不直接打开该模板dotm，而是打开使用该模板的文档docx）
+
+- `womacs.dotm`		这是发布的模板（发布前，直接打开`womacs-dev.dotm`，然后运行其中的generate宏来产生`womacs.dotm`）
+
+
+

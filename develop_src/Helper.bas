@@ -2,8 +2,44 @@ Attribute VB_Name = "Helper"
 ' womacs
 Option Explicit
 
+' Application.ScreenUpdating = False不工作，
+' 只能用Application.Visible = False代替
+' 下面这个变量为True就表明word主窗口的激活/失活是程序中为了模拟（ScreenUpdating）而主动引发的
+' 但后来证明这种方式行不通
+Public as_screen_updating As Boolean
+'Public event_count As Integer
+
+
 Dim old_doc_saved_state As Boolean
 Dim push_num As Long    ' for debug
+
+Sub turn_on_off_screen_updating(ByVal flag As Boolean)
+    Application.ScreenUpdating = flag
+    'Application.ScreenUpdating = False不工作，
+    '只好用Application.Visible = False来代替
+    '这会带来一些混淆
+    '所以我们需要用一个变量来表明本次Application.Visible的变化是为了模拟Application.ScreenUpdating的变化
+    as_screen_updating = True
+'    event_count = event_count + 1  '下面这行将引发几次事件？不好说，万一还有还别的word窗口存在
+    Application.Visible = flag
+'    DoEvents
+    as_screen_updating = False
+    '然而，当WindowDeactivate/WindowActivate事件发生时，监测到的as_screen_updating总是False
+    '也就是说Application.Visible = flag是非阻塞地激发了WindowDeactivate/WindowActivate事件
+    '当WindowDeactivate/WindowActivate事件处理程序被调用时，as_screen_updating = False已经发生
+    '所以总是监测到其值为False
+    
+    
+    '副作用1：C-x C-s时，当按下C-x时，word窗口会短暂隐身，
+    '需要用户稍等片刻，等word窗口显现之后，再按下C-s
+    '如果在隐身期按了C-s，跟没按一样。word主窗口得不到该按键
+    '如果word窗口隐身后，成为前台窗口的也是一个word窗口，并且其也处在womacs模式下
+    'C-s将在新的前台窗口中产生作用
+    
+    '副作用2：窗口隐身后，可能会有新的文档成为ActiveDocument
+    '使用ActiveDocument时一定要当心
+End Sub
+
 
 Sub push_saved_state(ByVal Doc As Document)
     Debug.Assert push_num = 0

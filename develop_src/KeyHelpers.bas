@@ -186,7 +186,7 @@ Sub bind(code As Long, key_desc As String, Optional Shift As Boolean = False)
 
     Dim key_proc_name As String
     Dim final_key_code As Long
-
+    
     'like x
     key_proc_name = "key_proc_" & key_desc
     If Shift Then
@@ -196,7 +196,7 @@ Sub bind(code As Long, key_desc As String, Optional Shift As Boolean = False)
     End If
     KeyBindings.Add KeyCode:=final_key_code, _
         KeyCategory:=wdKeyCategoryCommand, command:=key_proc_name
-    
+        
     'like C-x
     key_proc_name = "key_proc_C_" & key_desc
     If Shift Then
@@ -206,7 +206,7 @@ Sub bind(code As Long, key_desc As String, Optional Shift As Boolean = False)
     End If
     KeyBindings.Add KeyCode:=final_key_code, _
         KeyCategory:=wdKeyCategoryCommand, command:=key_proc_name
-    
+        
     'like M-x
     key_proc_name = "key_proc_M_" & key_desc
     If Shift Then
@@ -216,7 +216,7 @@ Sub bind(code As Long, key_desc As String, Optional Shift As Boolean = False)
     End If
     KeyBindings.Add KeyCode:=final_key_code, _
         KeyCategory:=wdKeyCategoryCommand, command:=key_proc_name
-
+        
 End Sub
 
 
@@ -224,12 +224,19 @@ Sub bind_all_key_procs(ByVal Doc As Document)
     push_saved_state Doc
 
     CustomizationContext = Doc
+    
+    'MsgBox "begin"
+    turn_on_off_screen_updating False
+    
 
-    KeyBindings.clearAll
+    KeyBindings.clearAll '关掉这行貌似能快一点
     
     'following should be corresponding to key_desc_to_key_code
     bind_range wdKey0, wdKey9
+    'DoEvents
     bind_range wdKeyA, wdKeyZ
+    'DoEvents
+    'MsgBox "1" '从begin到此处耗时很久，比从此处到end还久
     bind wdKeyOpenSquareBrace, "OpenSquareBrace"
     bind wdKeyCloseSquareBrace, "CloseSquareBrace"
     bind wdKeyBackSlash, "BackSlash"
@@ -244,7 +251,21 @@ Sub bind_all_key_procs(ByVal Doc As Document)
     bind wdKeyEquals, "Equals"
     bind wdKeyBackspace, "Backspace"
     bind wdKeySpacebar, "Spacebar"
+    
+    turn_on_off_screen_updating True
 
+    '经实测，从上面的begin到下面的end，两个消息框之间时间很长，光标闪烁
+    '但怪异的是，如果在vba IDE中，在当前过程入口和出口各设一个断点，
+    '这两个断点之间只要很短的时间就能完成，begin跟end两个消息也间隔很短
+    '为什么断点的存在会影响程序行为呢？
+    '因为vba IDE挡住了word主窗口，所以界面不会刷新。
+    '所以我怀疑是word界面刷新导致。光标忽闪忽闪就是明证
+    '按理说Application.ScreenUpdating = False应该有效的，但实测无效
+    '估计是word2010之后的版本给改坏了
+    '这就启发我用Application.Visible = False代替Application.ScreenUpdating = False
+    '果然成功了
+    'MsgBox "end"
+    
     pop_saved_state Doc
 
 End Sub
